@@ -24,13 +24,11 @@ ARCHITECTURE projecttb OF rst_test IS
     SIGNAL tb_z0, tb_z1, tb_z2, tb_z3 : STD_LOGIC_VECTOR (7 DOWNTO 0);
     SIGNAL tb_w : STD_LOGIC;
 
-    CONSTANT SCENARIOLENGTH : INTEGER := 42; -- 5 + 3 + 20 + 7   (RST) + (CH2-MEM[1]) + 20 CYCLES + (CH1-MEM[6])
+    CONSTANT SCENARIOLENGTH : INTEGER := 42;
     SIGNAL scenario_rst : unsigned(0 TO SCENARIOLENGTH - 1)     := "00110" & "000" & "00000000000000000000" & "0010000" & "0000000";
     SIGNAL scenario_start : unsigned(0 TO SCENARIOLENGTH - 1)   := "00000" & "111" & "00000000000000000000" & "1100000" & "1111100";
     SIGNAL scenario_w : unsigned(0 TO SCENARIOLENGTH - 1)       := "00000" & "101" & "00000000000000000000" & "0111000" & "0111000";
-    -- Channel 2 -> MEM[1] -> 162
-    -- Channel 1 -> MEM[2] -> 75
-
+    
     TYPE ram_type IS ARRAY (65535 DOWNTO 0) OF STD_LOGIC_VECTOR(7 DOWNTO 0);
     SIGNAL RAM : ram_type := (  0 => STD_LOGIC_VECTOR(to_unsigned(2, 8)),
                                 1 => STD_LOGIC_VECTOR(to_unsigned(162, 8)),
