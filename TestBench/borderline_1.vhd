@@ -28,9 +28,7 @@ ARCHITECTURE projecttb OF borderline_1 IS
     SIGNAL scenario_rst : unsigned(0 TO SCENARIOLENGTH - 1)     := "00110" & "00" & "00000000000000000000" & "00" & "00000000000000000000" & "000000000000000000";
     SIGNAL scenario_start : unsigned(0 TO SCENARIOLENGTH - 1)   := "00000" & "11" & "00000000000000000000" & "11" & "00000000000000000000" & "111111111111111111";
     SIGNAL scenario_w : unsigned(0 TO SCENARIOLENGTH - 1)       := "00000" & "11" & "00000000000000000000" & "00" & "00000000000000000000" & "100101110100001110";
-    -- Channel 2 -> MEM[1] -> 162
-    -- Channel 1 -> MEM[2] -> 75
-
+ 
     TYPE ram_type IS ARRAY (65535 DOWNTO 0) OF STD_LOGIC_VECTOR(7 DOWNTO 0);
     SIGNAL RAM : ram_type := (  0 => STD_LOGIC_VECTOR(to_unsigned(2, 8)),
                                 1 => STD_LOGIC_VECTOR(to_unsigned(162, 8)),
