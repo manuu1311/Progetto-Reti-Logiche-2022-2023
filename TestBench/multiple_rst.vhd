@@ -122,14 +122,21 @@ BEGIN
         -- wait for 10000 ns;
         WAIT UNTIL tb_rst = '1';
         WAIT UNTIL tb_rst = '0';
-        for i in 0 to 74 loop
+        for i in 0 to 31 loop
             ASSERT tb_z0 = "00000000" REPORT "TEST FALLITO (postreset Z0) found " & integer'image(to_integer(unsigned(tb_z0))) severity failure; 
             ASSERT tb_z1 = "00000000" REPORT "TEST FALLITO (postreset Z1) found " & integer'image(to_integer(unsigned(tb_z1))) severity failure; 
             ASSERT tb_z2 = "00000000" REPORT "TEST FALLITO (postreset Z2) found " & integer'image(to_integer(unsigned(tb_z2))) severity failure; 
             ASSERT tb_z3 = "00000000" REPORT "TEST FALLITO (postreset Z3) found " & integer'image(to_integer(unsigned(tb_z3))) severity failure; 
             wait for clock_period;
         end loop;
-        report "ciao";
+        wait until tb_rst='1';
+         for i in 0 to 41 loop
+            ASSERT tb_z0 = "00000000" REPORT "TEST FALLITO (postreset Z0) found " & integer'image(to_integer(unsigned(tb_z0))) severity failure; 
+            ASSERT tb_z1 = "00000000" REPORT "TEST FALLITO (postreset Z1) found " & integer'image(to_integer(unsigned(tb_z1))) severity failure; 
+            ASSERT tb_z2 = "00000000" REPORT "TEST FALLITO (postreset Z2) found " & integer'image(to_integer(unsigned(tb_z2))) severity failure; 
+            ASSERT tb_z3 = "00000000" REPORT "TEST FALLITO (postreset Z3) found " & integer'image(to_integer(unsigned(tb_z3))) severity failure; 
+            wait for clock_period;
+        end loop;        
         wait until tb_done='1';
         ASSERT tb_z0 = "00000000" REPORT "TEST FALLITO (postreset Z0) found " & integer'image(to_integer(unsigned(tb_z0))) severity failure; 
         ASSERT tb_z1 = "00000000" REPORT "TEST FALLITO (postreset Z1) found " & integer'image(to_integer(unsigned(tb_z1))) severity failure; 
