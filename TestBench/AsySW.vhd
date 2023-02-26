@@ -1,4 +1,4 @@
-
+--start e w non sincronizzati con il clock
 -- TB EXAMPLE PFRL 2022-2023
 
 LIBRARY ieee;
