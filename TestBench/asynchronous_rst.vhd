@@ -24,10 +24,10 @@ ARCHITECTURE projecttb OF asynchronous_rst IS
     SIGNAL tb_z0, tb_z1, tb_z2, tb_z3 : STD_LOGIC_VECTOR (7 DOWNTO 0);
     SIGNAL tb_w : STD_LOGIC;
 
-    CONSTANT SCENARIOLENGTH : INTEGER := 36;
-    SIGNAL scenario_rst : unsigned(0 TO SCENARIOLENGTH*2 - 1)     := "0000111100" & "000000" & "000000000000000000000000000000000000000000" & "00000010000000";
-    SIGNAL scenario_start : unsigned(0 TO SCENARIOLENGTH - 1)   := "00000" & "111" & "00000000000000000000" & "11111111";
-    SIGNAL scenario_w : unsigned(0 TO SCENARIOLENGTH - 1)       := "00000" & "101" & "00000000000000000000" & "01101110";
+    CONSTANT SCENARIOLENGTH : INTEGER := 61;
+    SIGNAL scenario_rst : unsigned(0 TO SCENARIOLENGTH - 1)     := "00000" & "111" & "00000000000000000000" & "11111111" & "00000000000000000000" & "11111";
+    SIGNAL scenario_start : unsigned(0 TO SCENARIOLENGTH - 1)   := "00000" & "111" & "00000000000000000000" & "11111111" & "00000000000000000000" & "11111";
+    SIGNAL scenario_w : unsigned(0 TO SCENARIOLENGTH - 1)       := "00000" & "101" & "00000000000000000000" & "01101110" & "00000000000000000000" & "11011";
 
     TYPE ram_type IS ARRAY (65535 DOWNTO 0) OF STD_LOGIC_VECTOR(7 DOWNTO 0);
     SIGNAL RAM : ram_type := (  0 => STD_LOGIC_VECTOR(to_unsigned(2, 8)),
@@ -124,7 +124,11 @@ BEGIN
         tb_rst<='1';
         wait for 10ns;
         tb_rst<='0';
-        wait for clock_period*21;
+        wait for clock_period*30;
+        tb_rst<='1';
+        wait for 5ns;
+        tb_rst<='0';
+        wait for clock_period*30;
    end process;    
 
     -- Process without sensitivity list designed to test the actual component.
@@ -171,7 +175,16 @@ BEGIN
         ASSERT tb_z1 = "00000000" REPORT "TEST FALLITO (postreset Z1) found " & integer'image(to_integer(unsigned(tb_z1))) severity failure; 
         ASSERT tb_z2 = "00000000" REPORT "TEST FALLITO (postreset Z2) found " & integer'image(to_integer(unsigned(tb_z2))) severity failure; 
         ASSERT tb_z3 = "00000000" REPORT "TEST FALLITO (postreset Z3) found " & integer'image(to_integer(unsigned(tb_z3))) severity failure;
+    wait until tb_rst='1';
+    wait until tb_rst='0';
+    for i in 0 to 20 loop
+        ASSERT tb_z0 = "00000000" REPORT "TEST FALLITO (postreset Z0) found " & integer'image(to_integer(unsigned(tb_z0))) severity failure; 
+        ASSERT tb_z1 = "00000000" REPORT "TEST FALLITO (postreset Z1) found " & integer'image(to_integer(unsigned(tb_z1))) severity failure; 
+        ASSERT tb_z2 = "00000000" REPORT "TEST FALLITO (postreset Z2) found " & integer'image(to_integer(unsigned(tb_z2))) severity failure; 
+        ASSERT tb_z3 = "00000000" REPORT "TEST FALLITO (postreset Z3) found " & integer'image(to_integer(unsigned(tb_z3))) severity failure;
+        wait for clock_period;
     
+   end loop; 
         
         ASSERT false REPORT "Simulation Ended! TEST PASSATO (EXAMPLE)" SEVERITY failure;
     END PROCESS testRoutine;
