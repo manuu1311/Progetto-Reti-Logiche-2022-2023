@@ -24,10 +24,12 @@ ARCHITECTURE projecttb OF heavy_test IS
     SIGNAL tb_z0, tb_z1, tb_z2, tb_z3 : STD_LOGIC_VECTOR (7 DOWNTO 0);
     SIGNAL tb_w : STD_LOGIC;
 
-    CONSTANT SCENARIOLENGTH : INTEGER := 199;
+    CONSTANT SCENARIOLENGTH : INTEGER := 199; -- 5 + 3 + 20 + 7   (RST) + (CH2-MEM[1]) + 20 CYCLES + (CH1-MEM[6])
     SIGNAL scenario_rst : unsigned(0 TO SCENARIOLENGTH - 1)     := "00110" & "00000000000" & "00000000000000000000" & "000000000" & "00000000000000000000" & "0000000000000" & "00000000000000000000" & "000000000000000" & "00000000000000000000" & "001" & "00000000000" & "00000000000000000000" & "000000000000" & "00100000000000000000";                                                 
     SIGNAL scenario_start : unsigned(0 TO SCENARIOLENGTH - 1)   := "00000" & "11111111111" & "00000000000000000000" & "111111111" & "00000000000000000000" & "1111111111111" & "00000000000000000000" & "111111111111111" & "00000000000000000000" & "111" & "11111111111" & "00000000000000000000" & "111111111111" & "00000000000000000000";
     SIGNAL scenario_w : unsigned(0 TO SCENARIOLENGTH - 1)       := "00000" & "10100011101" & "00000000000000000000" & "100111000" & "00000000000000000000" & "1100101001111" & "00000000000000000000" & "001110101110010" & "00000000000000000000" & "111" & "01110101010" & "00000000000000000000" & "111110101000" & "00000000000000000000";
+    -- Channel 2 -> MEM[1] -> 162
+    -- Channel 1 -> MEM[2] -> 75
 
     TYPE ram_type IS ARRAY (65535 DOWNTO 0) OF STD_LOGIC_VECTOR(7 DOWNTO 0);
     SIGNAL RAM : ram_type := (  285 => std_logic_vector(to_unsigned(93,8)),
@@ -138,6 +140,7 @@ BEGIN
         WAIT FOR CLOCK_PERIOD/2;
         ASSERT tb_z2 = std_logic_vector(to_unsigned(93, 8))  REPORT "TEST FALLITO (Z2 ---) found " & integer'image(to_integer(unsigned(tb_z2))) severity failure;
         WAIT UNTIL tb_done = '0';
+        wait for clock_period/2;
         ASSERT tb_z0 = "00000000" REPORT "TEST FALLITO (postdone Z0) found " & integer'image(to_integer(unsigned(tb_z0))) severity failure; 
         ASSERT tb_z1 = "00000000" REPORT "TEST FALLITO (postdone Z1) found " & integer'image(to_integer(unsigned(tb_z1))) severity failure; 
         ASSERT tb_z2 = "00000000" REPORT "TEST FALLITO (postdone Z2) found " & integer'image(to_integer(unsigned(tb_z2))) severity failure; 
@@ -150,10 +153,12 @@ BEGIN
         
         wait until tb_start='1';
         wait until tb_done='1';
+        wait for clock_period/2;
         ASSERT tb_z2 = std_logic_vector(to_unsigned(77, 8))  REPORT "TEST FALLITO (Z2 ---) found " & integer'image(to_integer(unsigned(tb_z2))) severity failure; 
         ASSERT tb_z3 = std_logic_vector(to_unsigned(32, 8))  REPORT "TEST FALLITO (Z3 ---) found " & integer'image(to_integer(unsigned(tb_z3))) severity failure; 
         wait until tb_start='1';
         wait until tb_done='1';
+        wait for clock_period/2;
         ASSERT tb_z2 = std_logic_vector(to_unsigned(77, 8))  REPORT "TEST FALLITO (Z2 ---) found " & integer'image(to_integer(unsigned(tb_z2))) severity failure; 
         ASSERT tb_z3 = std_logic_vector(to_unsigned(32, 8))  REPORT "TEST FALLITO (Z3 ---) found " & integer'image(to_integer(unsigned(tb_z3))) severity failure; 
         ASSERT tb_z0 = std_logic_vector(to_unsigned(121, 8))  REPORT "TEST FALLITO (Z0 ---) found " & integer'image(to_integer(unsigned(tb_z0))) severity failure;
@@ -164,6 +169,7 @@ BEGIN
         ASSERT tb_z2 = "00000000" REPORT "TEST FALLITO (postdone Z) found " & integer'image(to_integer(unsigned(tb_z2))) severity failure; 
         ASSERT tb_z3 = "00000000" REPORT "TEST FALLITO (postdone Z) found " & integer'image(to_integer(unsigned(tb_z3))) severity failure; 
         wait until tb_done='1';
+        wait for clock_period/2;
         ASSERT tb_z0 = "00000000" REPORT "TEST FALLITO (postdone Z) found " & integer'image(to_integer(unsigned(tb_z0))) severity failure; 
         ASSERT tb_z1 = std_logic_vector(to_unsigned(13, 8)) REPORT "TEST FALLITO (postdone Z1) found " & integer'image(to_integer(unsigned(tb_z1))) severity failure; 
         ASSERT tb_z2 = "00000000" REPORT "TEST FALLITO (postdone Z) found " & integer'image(to_integer(unsigned(tb_z2))) severity failure; 

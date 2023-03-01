@@ -1,4 +1,4 @@
---start e w non sincronizzati con il clock
+
 -- TB EXAMPLE PFRL 2022-2023
 
 LIBRARY ieee;
@@ -134,6 +134,7 @@ BEGIN
     testRoutine : PROCESS IS
     BEGIN
     wait until tb_done='1';
+    wait for clock_period/2;
     ASSERT tb_z0 = "00000000" REPORT "TEST FALLITO (postreset Z0--Z3 != 0 ) found " & integer'image(to_integer(unsigned(tb_z0))) severity failure; 
     ASSERT tb_z1 = "00000000" REPORT "TEST FALLITO (postreset Z0--Z3 != 0 ) found " & integer'image(to_integer(unsigned(tb_z1))) severity failure; 
     ASSERT tb_z2 = "00000000" REPORT "TEST FALLITO (postreset Z0--Z3 != 0 ) found " & integer'image(to_integer(unsigned(tb_z2))) severity failure; 

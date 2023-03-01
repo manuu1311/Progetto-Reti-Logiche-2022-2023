@@ -138,6 +138,7 @@ BEGIN
             wait for clock_period;
         end loop;        
         wait until tb_done='1';
+        wait for clock_period/2;
         ASSERT tb_z0 = "00000000" REPORT "TEST FALLITO (postreset Z0) found " & integer'image(to_integer(unsigned(tb_z0))) severity failure; 
         ASSERT tb_z1 = "00000000" REPORT "TEST FALLITO (postreset Z1) found " & integer'image(to_integer(unsigned(tb_z1))) severity failure; 
         ASSERT tb_z2 = std_logic_vector(to_unsigned(88,8)) REPORT "TEST FALLITO (postreset Z2) found " & integer'image(to_integer(unsigned(tb_z2))) severity failure; 
