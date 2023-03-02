@@ -130,6 +130,7 @@ BEGIN
             wait for clock_period;
         end loop;
         wait until tb_rst='1';
+        wait for clock_period/2;
          for i in 0 to 41 loop
             ASSERT tb_z0 = "00000000" REPORT "TEST FALLITO (postreset Z0) found " & integer'image(to_integer(unsigned(tb_z0))) severity failure; 
             ASSERT tb_z1 = "00000000" REPORT "TEST FALLITO (postreset Z1) found " & integer'image(to_integer(unsigned(tb_z1))) severity failure; 
